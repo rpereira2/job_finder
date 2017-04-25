@@ -1,4 +1,3 @@
-require 'httparty'
 # require 'json'
 
 # response = HTTParty.get('https://api.github.com/users/eddroid')
@@ -20,19 +19,21 @@ require 'httparty'
 # response = HTTParty.put('http://requestb.in/1n4e0i61', body: data)
 #
 # puts response.body
-
+require 'sinatra'
+require 'httparty'
 require 'nokogiri'
 
-url = "https://www.indeed.com/jobs?q=software+engineer&l=Boca+Raton%2C+FL"
+get '/' do
+  url = "https://www.indeed.com/jobs?q=software+engineer&l=Boca+Raton%2C+FL"
+  response = HTTParty.get url
 
-response = HTTParty.get url
+  dom = Nokogiri::HTML(response.body)
 
-dom = Nokogiri::HTML(response.body)
+  job_titles =
 
-job_titles =
+    dom.css('.jobtitle').map do |obj|
+      obj.text
+    end
 
-  dom.css('.jobtitle').map do |obj|
-    obj.text
-  end
-
-p job_titles
+  p job_titles
+end
