@@ -24,14 +24,15 @@ require 'httparty'
 require 'nokogiri'
 
 get '/' do
-  url = "https://www.indeed.com/jobs?q=software+engineer&l=Boca+Raton%2C+FL"
+  category = params["job"]
+  url = "https://miami.craigslist.org/search/#{category}?s=0"
   response = HTTParty.get url
 
   dom = Nokogiri::HTML(response.body)
 
   job_titles =
 
-    dom.css('.jobtitle').map do |obj|
+    dom.css('.hdrlnk').map do |obj|
       obj.text
     end
 
